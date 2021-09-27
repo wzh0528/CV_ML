@@ -32,11 +32,9 @@ FLAGS = parser.parse_args()
 '''
 
 # Loading ShapeNet Dataset
-# Loading ShapeNet Dataset
 data_paths = [line.rstrip() for line in open(os.path.join(BASE_DIR, 'all.csv'))]
 data_paths.pop(0)
 print(len(data_paths))
-
 train_data_paths = []
 test_data_paths = []
 val_data_paths = []
@@ -49,7 +47,6 @@ for p in data_paths:
     else:
         val_data_paths.append(elements[1] + '/' + elements[3])
 
-print(train_data_paths[0])
 
 ex_list = []
 for mesh in train_data_paths:
@@ -60,6 +57,11 @@ for mesh in train_data_paths:
         mesh_dict['class_label'] = data_utils.class_dict[mesh.split('/')[0]]
         ex_list.append(mesh_dict)
 
+print(len(ex_list))
+print('--------saving as numpy file---------------')
+ex_np_list=np.array(ex_list)
+np.save('meshes/ex_list.npy',ex_np_list)
+print('----------------saved----------------------')
 synthetic_dataset = tf.data.Dataset.from_generator(
     lambda: ex_list,
     output_types={

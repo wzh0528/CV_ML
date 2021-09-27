@@ -308,7 +308,6 @@ def load_process_mesh(mesh_obj_path, quantization_bits=8):
     """Load obj file and process."""
     # Load mesh
     vertices, faces = read_obj(mesh_obj_path)
-
     # Transpose so that z-axis is vertical.
     vertices = vertices[:, [2, 0, 1]]
 
@@ -326,7 +325,6 @@ def load_process_mesh(mesh_obj_path, quantization_bits=8):
 
     # Flatten faces and add 'new face' = 1 and 'stop' = 0 tokens.
     faces = flatten_faces(faces)
-
     # Discard degenerate meshes without faces.
     if len(vertices) >= 800 or len(faces) >= 2800:
         return {
