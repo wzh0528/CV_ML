@@ -60,6 +60,12 @@ transformer ⬇除了中间模块，其余和encoder相同，中间模块所做�
 
 parallel √   输出长度可控 √
 
+multi-modality ×  
+
+no dependency on output structure × 
+
+no latent variable ×
+
 #### Training
 
 transformer做法: **Teacher forcing: using the ground truth as input**
