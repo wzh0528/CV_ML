@@ -12,6 +12,8 @@ assume:  corruption process is conditionally *independent* of data features when
 
 ​	pair noise: 只可能变换到一种label
 
+
+
 #### *2) **Instance-dependent Label Noise***
 
 assume: corruption probability is assumed to be *dependent* on both the data features and class labels 
