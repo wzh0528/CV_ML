@@ -6,11 +6,11 @@
 
 assume:  corruption process is conditionally *independent* of data features when the true label is given
 
-​	symmetric noise
+​	symmetric noise : 变换到其他label的可能性相同
 
-​	asymmetric noise(label-dependent)
+​	asymmetric noise(label-dependent): 变换到其他label的可能性不同
 
-​	pair noise
+​	pair noise: 只可能变换到一种label
 
 #### *2) **Instance-dependent Label Noise***
 
