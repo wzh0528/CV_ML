@@ -10,7 +10,7 @@ import data_utils
 
 # Prepare synthetic dataset
 ex_list = []
-d = {1: 1, 2: 1, 3: 2, 4: 3}
+
 for k, mesh in enumerate(['cube', 'cylinder', 'cone', 'icosphere']):
     mesh_dict, flag = data_utils.load_process_mesh(
         os.path.join('meshes', '{}.obj'.format(mesh)))

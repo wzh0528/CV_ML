@@ -13,8 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-python3 -m venv polygen
+python -m venv polygen
 source polygen/bin/activate
-pip3 install .
-python3 model_test.py
+python model_test.py
 deactivate
