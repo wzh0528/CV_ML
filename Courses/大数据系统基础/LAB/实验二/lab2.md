@@ -286,7 +286,7 @@ def rm(self, dfs_path):
 
 ### 5. data replication
 
-其实这个DFS的`dfs_replication`为`1`，也就是一个数据块存储在一台主机上，请大家修改common.py里的配置，以及namenode.py、datanode.py、client.py中对应的部分，实现存储多副本块存储，推荐`dfs_replicatio=3`，在5台机器上测试。（1 分）
+其实这个DFS的`dfs_replication`为`1`，也就是一个数据块存储在一台主机上，请大家修改common.py里的配置，以及namenode.py、datanode.py、client.py中对应的部分，实现存储多副本块存储，推荐`dfs_replication=3`，在5台机器上测试。（1 分）
 
 ==检查点==
 

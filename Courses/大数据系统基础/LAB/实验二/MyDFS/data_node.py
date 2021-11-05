@@ -1,5 +1,7 @@
 import os
 import socket
+import time
+from multiprocessing import Process
 
 from common import *
 
@@ -22,15 +24,15 @@ class DataNode:
                 # 等待连接，连接后返回通信用的套接字
                 sock_fd, addr = listen_fd.accept()
                 print("Received request from {}".format(addr))
-                
+
                 try:
                     # 获取请求方发送的指令
                     request = str(sock_fd.recv(BUF_SIZE), encoding='utf-8')
                     request = request.split()  # 指令之间使用空白符分割
                     print(request)
-                    
+
                     cmd = request[0]  # 指令第一个为指令类型
-                    
+
                     if cmd == "load":  # 加载数据块
                         dfs_path = request[1]  # 指令第二个参数为DFS目标地址
                         response = self.load(dfs_path)
@@ -44,7 +46,7 @@ class DataNode:
                         response = self.format()
                     else:
                         response = "Undefined command: " + " ".join(request)
-                    
+
                     sock_fd.send(bytes(response, encoding='utf-8'))
                 except KeyboardInterrupt:
                     break
@@ -56,16 +58,16 @@ class DataNode:
             print(e)
         finally:
             listen_fd.close()
-    
+
     def load(self, dfs_path):
         # 本地路径
         local_path = data_node_dir + dfs_path
         # 读取本地数据
         with open(local_path) as f:
             chunk_data = f.read(dfs_blk_size)
-        
+
         return chunk_data
-    
+
     def store(self, sock_fd, dfs_path):
         # 从Client获取块数据
         chunk_data = sock_fd.recv(BUF_SIZE)
@@ -76,23 +78,35 @@ class DataNode:
         # 将数据块写入本地文件
         with open(local_path, "wb") as f:
             f.write(chunk_data)
-        
+
         return "Store chunk {} successfully~".format(local_path)
-    
+
     def rm(self, dfs_path):
         local_path = data_node_dir + dfs_path
         rm_command = "rm -rf " + local_path
         os.system(rm_command)
-        
+
         return "Remove chunk {} successfully~".format(local_path)
-    
+
     def format(self):
         format_command = "rm -rf {}/*".format(data_node_dir)
         os.system(format_command)
-        
+
         return "Format datanode successfully~"
+
+    def heartbeat(self):
+        name_node_sock = socket.socket()
+        name_node_sock.connect((name_node_host, name_node_port))
+        while True:
+            request = "heartbeat {}".format(time.strftime('%y-%m-%d %H:%M:%S'))
+            print(request)
+
+            name_node_sock.send(bytes(request, encoding='utf-8'))
+            print(str(name_node_sock.recv(BUF_SIZE), encoding='utf-8'))
+            time.sleep(10)
 
 
 # 创建DataNode对象并启动
 data_node = DataNode()
-data_node.run()
+Process(target=data_node.run).start()
+Process(target=data_node.heartbeat).start()

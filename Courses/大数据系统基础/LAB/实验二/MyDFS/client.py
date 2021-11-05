@@ -74,15 +74,16 @@ class Client:
         #  根据FAT表逐个从目标DataNode请求数据块
         tmp = ''
         for idx, row in fat.iterrows():
-            data_node_sock = socket.socket()
-            data_node_sock.connect((row['host_name'], data_node_port))
-            blk_path = dfs_path + ".blk{}".format(row['blk_no'])
+            if not idx % dfs_replication:
+                data_node_sock = socket.socket()
+                data_node_sock.connect((row['host_name'], data_node_port))
+                blk_path = dfs_path + ".blk{}".format(row['blk_no'])
 
-            request = "load {}".format(blk_path)
-            data_node_sock.send(bytes(request, encoding='utf-8'))
-            time.sleep(0.2)
-            tmp += data_node_sock.recv(int(row['blk_size'])).decode()
-            data_node_sock.close()
+                request = "load {}".format(blk_path)
+                data_node_sock.send(bytes(request, encoding='utf-8'))
+                time.sleep(0.2)
+                tmp += data_node_sock.recv(int(row['blk_size'])).decode()
+                data_node_sock.close()
 
         #  写入到本地文件中
         os.system("mkdir -p {}".format(os.path.dirname(local_path)))

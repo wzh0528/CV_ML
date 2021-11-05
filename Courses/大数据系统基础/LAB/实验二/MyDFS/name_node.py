@@ -2,6 +2,7 @@ import math
 import os
 import socket
 
+
 import numpy as np
 import pandas as pd
 
@@ -53,6 +54,9 @@ class NameNode:
                         response = self.rm_fat_item(dfs_path)
                     elif cmd == "format":
                         response = self.format()
+                    elif cmd == "heartbeat":
+                        strftime = request[1]
+                        response = self.heartbeat(strftime)
                     else:  # 其他位置指令
                         response = "Undefined command: " + " ".join(request)
                     
@@ -98,14 +102,15 @@ class NameNode:
         nb_blks = int(math.ceil(file_size / dfs_blk_size))
         print(file_size, nb_blks)
         
-        # todo 如果dfs_replication为复数时可以新增host_name的数目
+        # 如果dfs_replication为复数时可以新增host_name的数目
         data_pd = pd.DataFrame(columns=['blk_no', 'host_name', 'blk_size'])
         
         for i in range(nb_blks):
             blk_no = i
-            host_name = np.random.choice(host_list, size=dfs_replication, replace=False)[0]
+            host_names = np.random.choice(host_list, size=dfs_replication, replace=False)
             blk_size = min(dfs_blk_size, file_size - i * dfs_blk_size)
-            data_pd.loc[i] = [blk_no, host_name, blk_size]
+            for index, host_name in enumerate(host_names):
+                data_pd.loc[2 * i + index] = [blk_no, host_name, blk_size]
         
         # 获取本地路径
         local_path = name_node_dir + dfs_path
@@ -127,6 +132,10 @@ class NameNode:
         format_command = "rm -rf {}/*".format(name_node_dir)
         os.system(format_command)
         return "Format namenode successfully~"
+
+    def heartbeat(self, strftime):
+
+        return "successfully"
 
 
 # 创建NameNode并启动
